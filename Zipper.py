@@ -93,11 +93,19 @@ class MyApp(QWidget):
 		# gets the path of the dir and returns a tuple of 
 		# (list of the paths of the files, list of the names of the files)
 		# returns the result to the zipper function
-		files_list = [f for f in os.listdir(dirpath) if os.isfile(os.join(dirpath, f))]
+
+		def absoluteFilePaths(directory):
+			paths = []
+			for dirpath2,_,filenames in os.walk(directory):
+				for f in filenames:
+					paths.append(os.path.abspath(os.path.join(dirpath2, f)))
+			return paths
+
+		files_list = absoluteFilePaths(dirpath)
 		def path_leaf(path):
 			head, tail = ntpath.split(path)
 			return tail or ntpath.basename(head)
-
+		print(files_list)
 		return self.zipper((files_list, [path_leaf(i) for i in files_list]))
 
 	def filesinfo(self, list_of_paths):
